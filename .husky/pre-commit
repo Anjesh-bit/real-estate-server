@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+npm run type-check
+npx lint-staged

@@ -1,0 +1,36 @@
+import { ENVIRONMENT } from "#constants/env.constant.js";
+
+import { ENV } from "./env.config.js";
+
+const [production] = ENVIRONMENT;
+
+export const TOKEN = {
+  ACCESS_TOKEN_EXPIRY: ENV.JWT_ACCESS_TOKEN_EXPIRY,
+  ACCESS_TOKEN_SECRET: ENV.JWT_ACCESS_TOKEN_SECRET,
+  ALGORITHM: ENV.JWT_ALGORITHM,
+
+  AUDIENCE: ENV.JWT_AUDIENCE,
+  CLOCK_TOLERANCE: ENV.JWT_CLOCK_TOLERANCE,
+
+  COOKIE_CONFIG: {
+    DOMAIN: ENV.COOKIE_DOMAIN ?? undefined,
+    HTTP_ONLY: true,
+    MAX_AGE: 7 * 24 * 60 * 60 * 1000,
+    PATH: "/",
+    REFRESH_TOKEN_COOKIE_NAME: "refreshToken",
+    SAME_SITE: process.env.NODE_ENV === production ? "strict" : "lax",
+    SECURE: process.env.NODE_ENV === production,
+  },
+  ISSUER: ENV.JWT_ISSUER,
+
+  RATE_LIMIT: {
+    MAX_ATTEMPTS: ENV.AUTH_MAX_ATTEMPTS,
+    SKIP_FAILED_REQUESTS: false,
+    SKIP_SUCCESSFUL_REQUESTS: true,
+    WINDOW_MS: ENV.WINDOW_MS,
+  },
+
+  REFRESH_TOKEN_EXPIRY: ENV.JWT_REFRESH_TOKEN_EXPIRY,
+
+  REFRESH_TOKEN_SECRET: ENV.JWT_REFRESH_TOKEN_SECRET,
+};
