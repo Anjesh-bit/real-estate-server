@@ -1,7 +1,11 @@
+import http from "http";
+
 import app from "#app.js";
 import { ENV } from "#config/env.config.js";
 import type { MongoConnection } from "#connections/mongo.js";
 import { mongoManager } from "#connections/mongo.js";
+import { registerSocketHandlers } from "#connections/socket.handlers.js";
+import { socketConnection } from "#connections/socket.js";
 import logger from "#lib/helpers/winston.helpers.js";
 
 async function gracefulShutdown(): Promise<void> {
@@ -9,8 +13,11 @@ async function gracefulShutdown(): Promise<void> {
   try {
     await mongoManager.closeAll();
     logger.log("info", "Database connections closed");
+
+    await socketConnection.disconnect();
+    logger.log("info", "Socket.IO disconnected");
   } catch (error: unknown) {
-    logger.error("Error closing database connections:", error);
+    logger.error("Error during shutdown:", error);
   }
   process.exit(0);
 }
@@ -18,7 +25,7 @@ async function gracefulShutdown(): Promise<void> {
 async function initializeDatabase(): Promise<MongoConnection> {
   const connection: MongoConnection = mongoManager.createConnection(
     "default",
-    ENV.MONGODB_URI ?? "mongodb://anjesh-quantum:admin%40123@localhost:27017/?authSource=admin",
+    ENV.MONGODB_URI ?? "mongodb://localhost:27017",
     ENV.DB_NAME ?? "real_estate_portal",
     {
       maxPoolSize: 20,
@@ -27,9 +34,7 @@ async function initializeDatabase(): Promise<MongoConnection> {
   );
   await connection.connect();
   const isHealthy: boolean = await connection.ping();
-  if (!isHealthy) {
-    throw new Error("Database ping failed");
-  }
+  if (!isHealthy) throw new Error("Database ping failed");
   logger.log("info", "Database connected successfully");
   return connection;
 }
@@ -37,8 +42,16 @@ async function initializeDatabase(): Promise<MongoConnection> {
 async function startServer(): Promise<void> {
   try {
     await initializeDatabase();
-    app.listen(ENV.PORT, (): void => {
-      logger.log("info", `Server is running on port ${ENV.PORT}`);
+
+    const httpServer = http.createServer(app);
+
+    const io = socketConnection.connect(httpServer);
+
+    registerSocketHandlers(io);
+
+    httpServer.listen(ENV.PORT, (): void => {
+      logger.log("info", `Server running on port ${ENV.PORT}`);
+      logger.log("info", `Socket.IO ready`);
     });
   } catch (error: unknown) {
     logger.error("Failed to start server:", error);
@@ -49,21 +62,16 @@ async function startServer(): Promise<void> {
 process.on("SIGINT", (): void => {
   void gracefulShutdown();
 });
-
 process.on("SIGTERM", (): void => {
   void gracefulShutdown();
 });
-
 process.on("unhandledRejection", (reason: unknown, promise: Promise<unknown>): void => {
   logger.error("Unhandled Rejection at:", promise, "reason:", reason);
   void gracefulShutdown();
 });
-
 process.on("uncaughtException", (error: unknown): void => {
   logger.error("Uncaught Exception:", error);
   void gracefulShutdown();
 });
 
 void startServer();
-
-export default app;

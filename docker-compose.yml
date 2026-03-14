@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+
+  app:
+    build: .
+    ports:
+      - "5000:3000"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://anjesh:beatles22@mongo:27017/?authSource=admin
+
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=anjesh
+      - MONGO_INITDB_ROOT_PASSWORD=beatles22
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

@@ -1,8 +1,7 @@
 import { execSync } from "child_process";
 
-import logger from "#lib/helpers/winston.helpers.js";
-
 import { validateBranchName } from "./validateBranch.js";
+import logger from "../lib/helpers/winston.helpers.js";
 
 try {
   const branchName: string = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();

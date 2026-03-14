@@ -1,14 +1,14 @@
 import { ObjectId } from "mongodb";
 
 import { mongoManager } from "#connections/mongo.js";
-import { COLLECTIONS } from "#constants/collection.constant.js";
+import { DB_COLLECTIONS } from "#constants/collection.constant.js";
 import { LeadStatusEnum } from "#constants/enums/lead.enum.js";
 import logger from "#lib/helpers/winston.helpers.js";
 import type { CreateLeadDTO, Lead, PaginationQuery, UpdateLeadDTO } from "#types/lead.types.js";
 import { validateObjectId } from "#utils/validateObjectId.utils.js";
 
 class LeadService {
-  private readonly leadCollection = COLLECTIONS.LEADS;
+  private readonly leadCollection = DB_COLLECTIONS.LEADS;
 
   private get collection() {
     return mongoManager.getConnection().getCollection<Lead>(this.leadCollection);

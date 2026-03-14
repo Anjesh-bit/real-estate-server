@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 import { mongoManager } from "#connections/mongo.js";
-import { COLLECTIONS } from "#constants/collection.constant.js";
+import { DB_COLLECTIONS } from "#constants/collection.constant.js";
 import { ListingStatus } from "#constants/enums/listing.enum.js";
 import { listing } from "#constants/listing.constant.js";
 import logger from "#lib/helpers/winston.helpers.js";
@@ -16,11 +16,11 @@ import { validateObjectId } from "#utils/validateObjectId.utils.js";
 
 class ListingService {
   private get developerCollection() {
-    return mongoManager.getConnection().getCollection(COLLECTIONS.DEVELOPERS);
+    return mongoManager.getConnection().getCollection(DB_COLLECTIONS.DEVELOPERS);
   }
 
   private get listingCollection() {
-    return mongoManager.getConnection().getCollection(COLLECTIONS.LISTINGS);
+    return mongoManager.getConnection().getCollection(DB_COLLECTIONS.LISTINGS);
   }
 
   async createListing(data: CreateListingDTO): Promise<{ listingId: ObjectId }> {
