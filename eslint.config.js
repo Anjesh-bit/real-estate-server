@@ -20,7 +20,7 @@ export default [
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
-        project: true,
+        project: ["./tsconfig.json", "./tsconfig.scripts.json"],
         tsconfigRootDir: process.cwd(),
       },
     },
@@ -45,7 +45,6 @@ export default [
       "@typescript-eslint/require-await": "warn",
       "@typescript-eslint/no-floating-promises": "warn",
       "func-names": "error",
-
       "import/order": [
         "error",
         {
@@ -60,6 +59,15 @@ export default [
       "import/no-duplicates": "error",
       "import/first": "error",
       "import/newline-after-import": "error",
+    },
+  },
+
+  {
+    files: ["commitlint.config.ts"],
+    languageOptions: {
+      parserOptions: {
+        project: null,
+      },
     },
   },
 ];

@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 import { mongoManager } from "#connections/mongo.js";
-import { COLLECTIONS } from "#constants/collection.constant.js";
+import { DB_COLLECTIONS } from "#constants/collection.constant.js";
 import logger from "#lib/helpers/winston.helpers.js";
 import type { CreateDeveloperDTO, Developer, UpdateDeveloperDTO } from "#types/admin.types.js";
 import { validateObjectId } from "#utils/validateObjectId.utils.js";
@@ -12,15 +12,15 @@ const userfieldsToTrim = ["name", "logoUrl", "description"] as const;
 
 class AdminService {
   private get developerCollection() {
-    return mongoManager.getConnection().getCollection(COLLECTIONS.DEVELOPERS);
+    return mongoManager.getConnection().getCollection(DB_COLLECTIONS.DEVELOPERS);
   }
 
   private get leadCollection() {
-    return mongoManager.getConnection().getCollection(COLLECTIONS.LEADS);
+    return mongoManager.getConnection().getCollection(DB_COLLECTIONS.LEADS);
   }
 
   private get userCollection() {
-    return mongoManager.getConnection().getCollection(COLLECTIONS.USERS);
+    return mongoManager.getConnection().getCollection(DB_COLLECTIONS.USERS);
   }
 
   async approveDeveloper(developerId: string): Promise<boolean> {

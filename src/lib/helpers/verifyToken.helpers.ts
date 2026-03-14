@@ -1,5 +1,5 @@
 import type { JwtPayload, VerifyOptions } from "jsonwebtoken";
-import { verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 import { TOKEN } from "#config/token.config.js";
 import { TokenTypeEnum } from "#constants/enums/auth.enum.js";
@@ -19,5 +19,5 @@ export const verifyToken = (
     issuer: TOKEN.ISSUER,
   };
 
-  return verify(token, secret, options);
+  return jwt.verify(token, secret, options);
 };

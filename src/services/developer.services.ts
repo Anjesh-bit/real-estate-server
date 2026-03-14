@@ -1,14 +1,14 @@
 import { ObjectId } from "mongodb";
 
 import { mongoManager } from "#connections/mongo.js";
-import { COLLECTIONS } from "#constants/collection.constant.js";
+import { DB_COLLECTIONS } from "#constants/collection.constant.js";
 import logger from "#lib/helpers/winston.helpers.js";
 import type { Developer, PaginationQuery } from "#types/admin.types.js";
 import { validateObjectId } from "#utils/validateObjectId.utils.js";
 
 class DeveloperService {
   private get developerCollection() {
-    return mongoManager.getConnection().getCollection(COLLECTIONS.DEVELOPERS);
+    return mongoManager.getConnection().getCollection(DB_COLLECTIONS.DEVELOPERS);
   }
 
   async getAllDevelopers(

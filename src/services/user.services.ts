@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 import { mongoManager } from "#connections/mongo.js";
-import { COLLECTIONS } from "#constants/collection.constant.js";
+import { DB_COLLECTIONS } from "#constants/collection.constant.js";
 import { UserRole } from "#constants/enums/auth.enum.js";
 import { users } from "#constants/user.constant.js";
 import logger from "#lib/helpers/winston.helpers.js";
@@ -16,7 +16,7 @@ import { validateObjectId } from "#utils/validateObjectId.utils.js";
 
 class UserService {
   private get userCollection() {
-    return mongoManager.getConnection().getCollection(COLLECTIONS.USERS);
+    return mongoManager.getConnection().getCollection(DB_COLLECTIONS.USERS);
   }
 
   async create(userData: CreateUserDTO): Promise<{ userId: string }> {
